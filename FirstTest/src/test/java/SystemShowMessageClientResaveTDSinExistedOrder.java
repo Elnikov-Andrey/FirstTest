@@ -48,8 +48,8 @@ public class SystemShowMessageClientResaveTDSinExistedOrder {
         driver.findElement(By.xpath("//button[@type='submit']")).click();
 
         //---Создаём техкарту
-        driver.findElement(By.xpath("//a[@href='/products/newProduct']")).click();
-        createTDS();
+        //driver.findElement(By.xpath("//a[@href='/products/newProduct']")).click();
+        //createTDS();
 
         //---Создаём заказ
         driver.findElement(By.xpath("//a[@href='/orders/newOrder']")).click();
@@ -114,16 +114,13 @@ public class SystemShowMessageClientResaveTDSinExistedOrder {
         wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//select[@id='deliveryAddress']/option[contains(text(), \"Самовывоз\")]")));
         driver.findElement(By.xpath("//select[@id='deliveryAddress']/option[contains(text(), \"Самовывоз\")]")).click();
         driver.findElement(By.xpath("//a[@title='Добавить изделие в заказ']")).click();
-
-        //wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//td[@tabindex=\"2\"]")));
-        //driver.findElement(By.xpath("//table[@class='table table-bordered table-hover']/tbody/tr[1]/td[1]")).click();
-        //driver.findElement(By.xpath("//a[@title='Добавить изделие в заказ']")).click();
-        //Actions action = new Actions(driver);
-        //newProduct.click();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@class=\"react-bs-container-body\"]/table[@class=\"table table-bordered table-hover\"]/tbody/tr[@class=\"not-approved-tds-stripes \"]")));
+        driver.findElement(By.xpath("//div[@class=\"react-bs-container-body\"]/table[@class=\"table table-bordered table-hover\"]/tbody/tr")).click();
+        wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//a[@title='Добавить изделие в заказ']")));
         driver.findElement(By.xpath("//a[@title='Добавить изделие в заказ']")).click();
-        List<WebElement> massiv = driver.findElements(By.xpath("//div[@class=\"react-bs-container-body\"]/table[@class=\"table table-bordered table-hover\"]/tbody/tr"));
-        System.out.println(massiv.size());
-        massiv.get(0).click();
-        driver.findElement(By.xpath("//a[@title='Добавить изделие в заказ']")).click();
+        driver.findElement(By.xpath("//input[@id=\"orderedProductQuantity\"]")).sendKeys("11");
+        driver.findElement(By.xpath("//a[@title='Сохранить заказ']")).click();
+        driver.findElement(By.xpath("//span[contains(text(), \"Сохранить и продолжить\")]")).click();
+        driver.findElement(By.xpath("//a[@title='На список заказов']")).click();
     }
 }
