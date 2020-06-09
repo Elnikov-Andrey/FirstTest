@@ -14,10 +14,12 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class SystemShowMessageClientResaveTDSinExistedOrder {
-
+    // bug 3518
     @FindBy(xpath = "//td[@tabindex=\"2\"]")
     public WebElement newProduct;
 
+    @FindBy(xpath = "//table[@class=\"table table-bordered table-hover\"]/tbody/tr[1]")
+    public WebElement line;
     private ChromeDriver driver;
     //public static String text;
 
@@ -52,14 +54,12 @@ public class SystemShowMessageClientResaveTDSinExistedOrder {
         //createTDS();
 
         //---Создаём заказ
-        driver.findElement(By.xpath("//a[@href='/orders/newOrder']")).click();
-        createOrder();
+        //driver.findElement(By.xpath("//a[@href='/orders/newOrder']")).click();
+        //createOrder();
 
-        /*driver.manage().timeouts().implicitlyWait(180, TimeUnit.SECONDS);
-        driver.findElement(By.xpath("//span[contains(@class,'price-box')][@data-product-id='244']")).click();
+        //---Меняем данные в техкарте
+        changeClientTDS();
 
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//ul[@id='mini-cart']")));
-        Assert.assertEquals("1", driver.findElement(By.xpath("//div[@class='minicart-header']//span[@class='counter-number']")).getText());*/
     }
 
     @AfterTest
@@ -114,6 +114,7 @@ public class SystemShowMessageClientResaveTDSinExistedOrder {
         wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//select[@id='deliveryAddress']/option[contains(text(), \"Самовывоз\")]")));
         driver.findElement(By.xpath("//select[@id='deliveryAddress']/option[contains(text(), \"Самовывоз\")]")).click();
         driver.findElement(By.xpath("//a[@title='Добавить изделие в заказ']")).click();
+
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@class=\"react-bs-container-body\"]/table[@class=\"table table-bordered table-hover\"]/tbody/tr[@class=\"not-approved-tds-stripes \"]")));
         driver.findElement(By.xpath("//div[@class=\"react-bs-container-body\"]/table[@class=\"table table-bordered table-hover\"]/tbody/tr")).click();
         wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//a[@title='Добавить изделие в заказ']")));
@@ -121,6 +122,21 @@ public class SystemShowMessageClientResaveTDSinExistedOrder {
         driver.findElement(By.xpath("//input[@id=\"orderedProductQuantity\"]")).sendKeys("11");
         driver.findElement(By.xpath("//a[@title='Сохранить заказ']")).click();
         driver.findElement(By.xpath("//span[contains(text(), \"Сохранить и продолжить\")]")).click();
-        driver.findElement(By.xpath("//a[@title='На список заказов']")).click();
+        driver.findElement(By.xpath("//a[@title='На главную']")).click();
+    }
+
+    public void changeClientTDS(){
+        WebDriverWait wait = new WebDriverWait(driver, 10);
+        driver.findElementByXPath("//a[@class=\"list-group-item\"][contains(text(), 'Каталог гофропродукции')]").click();
+        //wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@class=\"react-bs-container-body\"]/table[@class=\"table table-bordered table-hover\"]/tbody/tr[@class=\"not-approved-tds-stripes \"][1]")));
+        driver.findElementByXPath("//table[@class=\"table table-bordered table-hover\"]/tbody/tr[1]").click();
+
+
+        //wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//a[@class=\"control-btn btn fa fa-pencil fa-2x\"]")));
+        //driver.findElementsByClassName("not-approved-tds-stripes ").get(1).click();
+        driver.findElementByXPath("//a[@class=\"control-btn btn fa fa-pencil fa-2x\"]").click();
+        driver.findElementById("innerLength").sendKeys(randomValue());
+        driver.findElementByXPath("//div[@class=\"title-header-menu-item\"]/div/p[contains(text(), 'Сохранить')]").click();
+        driver.findElement(By.xpath("//a[@title='На главную']")).click();
     }
 }
